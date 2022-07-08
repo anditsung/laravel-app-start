@@ -39,7 +39,6 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'novaConfig' => Nova::jsonVariables($request),
-//            'user' => $request->user(),
         ]);
     }
 }

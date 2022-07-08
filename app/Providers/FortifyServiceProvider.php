@@ -6,7 +6,6 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Events\Login;
 use App\Repositories\InviteRepository;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -47,7 +46,9 @@ class FortifyServiceProvider extends ServiceProvider
                 ->by($key)
                 ->response(function ($request, $limiter) {
                     return back()->withErrors([
-                        'email' => "Too many login attempts, You may try again in {$limiter['Retry-After']} seconds.",
+                        'email' => __("Too many login attempts, You may try again in :retry seconds.", [
+                            'retry' => $limiter['Retry-After'],
+                        ]),
                     ]);
                 });
         });
@@ -70,6 +71,7 @@ class FortifyServiceProvider extends ServiceProvider
             ) {
                 return $user;
             }
+            return null;
         });
 
         $this->registerViews();
